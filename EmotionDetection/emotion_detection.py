@@ -12,7 +12,17 @@ def emotion_detector(text_to_analyze):
     payload = { "raw_document" : { "text" : text_to_analyze } }
     # Sending a POST request to the sentiment analysis API
     response = requests.post(url, json=payload, headers=headers, timeout=20)
-        # Formatting the response to return a dictionary containing emotion analysis results
+    # Handling status_code 400 for no input
+    if response.status_code == 400:
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
+    # Formatting the response to return a dictionary containing emotion analysis results
     formatted_response = json.loads(response.text)
     formatted_result=formatted_response['emotionPredictions'][0]['emotion']
     dominant_emotion=""

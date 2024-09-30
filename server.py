@@ -24,13 +24,18 @@ def get_emotions():
     '''
     text_to_analyze = request.args.get('textToAnalyze')
     result = emotion_detector(text_to_analyze)
+    # Handling error
+    if result['dominant_emotion'] is None:
+        return "<b>Invalid text! Please try again!<b>"
+    # Format output
+    start_phrase = "For the given statement, the system response is "
     emotions_phrase = ""
     for emotion, score in result.items():
         if emotion != 'dominant_emotion':
             emotions_phrase = emotions_phrase + f"{emotion}: {score}, "
     emotions_phrase = emotions_phrase[:-2]
     closing_phrase = f". The dominant emotion is <b>{result['dominant_emotion']}</b>."
-    result_phrase = f"For the given statement, the system response is {emotions_phrase}{closing_phrase}"
+    result_phrase = f"{start_phrase}{emotions_phrase}{closing_phrase}"
     return result_phrase
 
 if __name__ == "__main__":
